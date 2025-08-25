@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Noticias sobre Ciencias Ocultas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#0f0f23;
+      --card:#1a1a2e;
+      --accent:#8b0000;
+      --text:#f0f0f0;
+      --muted:#b3b3b3;
+      --col-es:#2a1810;
+      --col-en:#1a1a2e;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);padding:30px 15px;}
+    header{text-align:center;margin-bottom:40px;}header h1{font-size:2.2rem;font-weight:600;}header p{color:var(--muted);}
+    .columns-container{display:flex;flex-wrap:wrap;gap:25px;max-width:1400px;margin:auto;justify-content:center;}
+    .column{flex:1;min-width:300px;background:var(--card);border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.4);}
+    .column-es{background:var(--col-es);}.column-en{background:var(--col-en);}
+    .column-header{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid var(--accent);}
+    .news-grid{display:grid;grid-template-columns:1fr;gap:20px;}
+    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 4px 8px rgba(0,0,0,.6);transition:.3s;display:flex;flex-direction:column;}
+    .card:hover{transform:translateY(-4px);box-shadow:0 6px 12px rgba(139,0,0,.3);}
+    .card img{width:100%;height:180px;object-fit:cover;transition:opacity .3s ease;}
+    .card-content{padding:18px;flex:1;display:flex;flex-direction:column;}
+    .card-content h3{font-size:1.1rem;margin-bottom:10px;}
+    .card-content .source,.card-content .date{font-size:.85rem;color:var(--muted);margin-bottom:8px;}
+    .card-content .date{color:var(--accent);}
+    .card-content .description{font-size:.9rem;color:var(--muted);margin-bottom:12px;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .card-content a{margin-top:auto;align-self:flex-start;color:var(--accent);font-weight:600;text-decoration:none;}
+    .card-content a:hover{text-decoration:underline;}
+    .loading{text-align:center;padding:60px;color:var(--muted);}
+    .load-more{display:block;margin:30px auto;padding:12px 28px;border:none;border-radius:30px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:.3s;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+    .load-more:hover{background:#660000;transform:translateY(-2px);}
+    .load-more:disabled{background:var(--muted);cursor:not-allowed;}
+    .error-message{background:#2a1810;color:#ff6b6b;padding:15px;border-radius:8px;margin:10px 0;border-left:4px solid var(--accent);text-align:center;}
+    .api-status{background:#1a2e1a;color:#90EE90;padding:10px 15px;border-radius:8px;margin:10px auto;max-width:600px;border-left:4px solid #4caf50;text-align:center;font-size:.9rem;}
+    .failed-image{opacity:.9;background:#e0e0e0;}
+    @media(max-width:768px){.columns-container{flex-direction:column;}}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1><i class="fas fa-moon"></i> Noticias sobre Ciencias Ocultas</h1>
+    <p>Últimas novedades sobre ocultismo, brujería, fenómenos paranormales y lo sobrenatural</p>
+  </header>
+
+  <div id="api-status" class="api-status" style="display:none;">
+    <i class="fas fa-check-circle"></i> Conectado a APIs de noticias en tiempo real
+  </div>
+
+  <div class="columns-container">
+    <div class="column column-es">
+      <div class="column-header"><i class="fas fa-language"></i><h2>Noticias en Español</h2></div>
+      <div id="news-es" class="news-grid"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando…</div></div>
+    </div>
+
+    <div class="column column-en">
+      <div class="column-header"><i class="fas fa-language"></i><h2>News in English</h2></div>
+      <div id="news-en" class="news-grid"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+    </div>
+  </div>
+
+  <button id="load-more" class="load-more">Cargar más noticias</button>
+
+  <script>
+    /* --------------------------- API KEYS --------------------------- */
+    const KEYS = {
+      GNEWS:   '42dd93284a0abf72a9a646d3b4a9c33e',
+      NEWSAPI: 'aaf83dcbd8694668ad89247b959db678',
+      NEWSDATA:'pub_a6e9ca27cc1644bf9a1cff0b8686b3eb',
+      THE_NEWS:'api_live_jXhP97cJw1oAwTrL50pkwaWmHq4HE2xBLnqgtDTu8e',
+      NYT:     'Eh3k0BwkVhNGIWmkxaSVDGnZMIW5HxOT',
+      GUARDIAN:'f88b103a-4f1d-4f19-a5e8-75124f32fb65'
+    };
+
+    /* --------------------------- CONFIG --------------------------- */
+    const ARTICLES_PER_PAGE = 6;
+    const OCCULT_KEYWORDS = [
+      'ocultismo','brujería','brujo','bruja','hechizo','ritual','satán','demonio',
+      'fantasma','espíritu','aparición','casa embrujada','exorcismo','paranormal',
+      'sobrenatural','psíquico','telepatía','clarividencia','ouija','sesión',
+      'poltergeist','críptido','esoterismo','misticismo','alquimia','tarot',
+      'astral','medium','channeling',
+      'occult','witchcraft','witch','spell','ritual','satan','demon','ghost',
+      'spirit','haunted','exorcism','paranormal','supernatural','psychic',
+      'telepathy','precognition','clairvoyant','seance','cryptid','ufology'
+    ];
+    const FALSE_POSITIVES = ['tea','herbal tea','chai','green tea','black tea','tea party'];
+    const FALLBACK_IMG = {
+      es:'https://via.placeholder.com/400x250/8b0000/ffffff?text=Ocultismo',
+      en:'https://via.placeholder.com/400x250/8b0000/ffffff?text=Occult'
+    };
+
+    /* --------------------------- UTILS --------------------------- */
+    const seenEs = new Set(), seenEn = new Set();
+    function safeDate(str){const d=new Date(str);return isNaN(d)?new Date():d;}
+    function generateId(a){return (a.title||'').substring(0,30).replace(/\s+/g,'_')+'_'+(a.source?.name||'noSource');}
+    function isOccult(a){
+      if(!a.title && !a.description) return false;
+      const txt=(a.title+' '+(a.description||'')).toLowerCase();
+      if(FALSE_POSITIVES.some(t=>txt.includes(t))) return false;
+      return OCCULT_KEYWORDS.some(k=>txt.includes(k));
+    }
+    function filterDup(arts,set){
+      return arts.filter(a=>{const id=generateId(a);if(set.has(id))return false;set.add(id);return true});
+    }
+    function fixImage(url){
+      if(!url || url.length<10) return null;
+      if(url.startsWith('//')) return 'https:'+url;
+      if(url.startsWith('/')) return 'https://static01.nyt.com'+url;
+      return url;
+    }
+    const proxy=u=>'https://corsproxy.io/?'+encodeURIComponent(u);
+
+    /* --------------------------- FETCHERS --------------------------- */
+    /* 1. GNews (working) */
+    async function fetchGNews(lang,page){
+      try{
+        const q=lang==='es'?'ocultismo OR brujería OR paranormal':'occult OR witchcraft OR paranormal';
+        const url=`https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=${lang}&max=10&page=${page}&apikey=${KEYS.GNEWS}`;
+        const res=await fetch(url); const data=await res.json();
+        return (data.articles||[]).map(a=>({...a,urlToImage:fixImage(a.image)}));
+      }catch{return []}
+    }
+
+    /* 2. NewsAPI (working) */
+    async function fetchNewsAPI(lang,page){
+      try{
+        const q=lang==='es'?'ocultismo OR brujería OR paranormal':'occult OR witchcraft OR paranormal';
+        const from=new Date(Date.now()-30*864e5).toISOString().split('T')[0];
+        const target=`https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&language=${lang}&from=${from}&sortBy=publishedAt&pageSize=20&page=${page}&apiKey=${KEYS.NEWSAPI}`;
+        const res=await fetch(proxy(target)); const data=await res.json();
+        return (data.articles||[]).map(a=>({...a,urlToImage:fixImage(a.urlToImage)}));
+      }catch{return []}
+    }
+
+    /* 3. NewsData (working) */
+    async function fetchNewsData(lang,page){
+      try{
+        const q=lang==='es'?'ocultismo,brujería,paranormal':'occult,witchcraft,paranormal';
+        const url=`https://newsdata.io/api/1/news?apikey=${KEYS.NEWSDATA}&q=${q}&language=${lang}&page=${page}`;
+        const res=await fetch(url); const data=await res.json();
+        return (data.results||[]).map(a=>({
+          title:a.title,description:a.description,url:a.link,urlToImage:fixImage(a.image_url),publishedAt:a.pubDate,source:{name:a.source_id}
+        }));
+      }catch{return []}
+    }
+
+    /* 4. TheNewsAPI (working) */
+    async function fetchTheNews(lang,page){
+      try{
+        const q=lang==='es'?'brujería OR ocultismo':'witchcraft OR occult';
+        const url=`https://api.thenewsapi.com/v1/news/all?api_token=${KEYS.THE_NEWS}&q=${encodeURIComponent(q)}&language=${lang}&limit=10&page=${page}`;
+        const res=await fetch(url); const data=await res.json();
+        return (data.data||[]).map(a=>({
+          title:a.title,description:a.description,url:a.url,urlToImage:fixImage(a.image_url),publishedAt:a.published_at,source:{name:a.source}
+        }));
+      }catch{return []}
+    }
+
+    /* 5. The Guardian (new key) */
+    async function fetchGuardian(lang,page){
+      try{
+        const q=lang==='es'?'brujería OR paranormal':'witchcraft OR paranormal';
+        const url=`https://content.guardianapis.com/search?q=${encodeURIComponent(q)}&api-key=${KEYS.GUARDIAN}&show-fields=thumbnail,trailText&page-size=10&page=${page}`;
+        const res=await fetch(proxy(url)); const data=await res.json();
+        return (data.response?.results||[]).map(a=>({
+          title:a.webTitle,description:a.fields?.trailText||'',url:a.webUrl,urlToImage:fixImage(a.fields?.thumbnail),publishedAt:a.webPublicationDate,source:{name:'The Guardian'}
+        }));
+      }catch{return []}
+    }
+
+    /* 6. New York Times (new key) */
+    async function fetchNYT(lang,page){
+      try{
+        const q=lang==='es'?'brujería':'witchcraft';
+        const url=`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${encodeURIComponent(q)}&api-key=${KEYS.NYT}&page=${page-1}`;
+        const res=await fetch(proxy(url)); const data=await res.json();
+        return (data.response?.docs||[]).map(a=>({
+          title:a.headline.main,description:a.snippet||'',url:a.web_url,urlToImage:fixImage(a.multimedia?.[0]?.url),publishedAt:a.pub_date,source:{name:'NYT'}
+        }));
+      }catch{return []}
+    }
+
+    /* --------------------------- MAIN FETCH --------------------------- */
+    async function fetchNews(lang,page){
+      const set = lang==='es'?seenEs:seenEn;
+      const providers = [
+        ()=>fetchGNews(lang,page),
+        ()=>fetchNewsAPI(lang,page),
+        ()=>fetchNewsData(lang,page),
+        ()=>fetchTheNews(lang,page),
+        ()=>fetchGuardian(lang,page),
+        ()=>fetchNYT(lang,page)
+      ];
+      let out=[];
+      for(const fn of providers){
+        const arr=await fn();
+        out=out.concat(filterDup(arr,set));
+        if(out.length>=10) break;
+      }
+      return out;
+    }
+
+    /* --------------------------- RENDER --------------------------- */
+    function render(arts,container,lang){
+      if(!arts.length){
+        container.innerHTML=`<div class="error-message"><i class="fas fa-exclamation-circle"></i>${lang==='es'?'No se encontraron noticias.':'No occult news found.'}</div>`;
+        return;
+      }
+      container.innerHTML='';
+      arts.forEach((a,i)=>{
+        const date=safeDate(a.publishedAt).toLocaleDateString(lang==='es'?'es-ES':'en-US',{year:'numeric',month:'long',day:'numeric'});
+        const card=document.createElement('div');card.className='card';
+        card.innerHTML=`
+          <img src="${a.urlToImage||FALLBACK_IMG[lang]}" alt="${a.title}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG[lang]}';this.classList.add('failed-image')">
+          <div class="card-content">
+            <span class="date">${date}</span>
+            <h3>${a.title}</h3>
+            <div class="source"><i class="fas fa-newspaper"></i> ${a.source?.name||'Desconocido'}</div>
+            ${a.description?`<div class="description">${a.description}</div>`:''}
+            <a href="${a.url}" target="_blank" rel="noopener noreferrer">${lang==='es'?'Leer más →':'Read more →'}</a>
+          </div>`;
+        card.style.opacity='0';card.style.transform='translateY(20px)';
+        container.appendChild(card);
+        setTimeout(()=>{card.style.transition='opacity .3s ease, transform .3s ease';card.style.opacity='1';card.style.transform='translateY(0)';},i*100);
+      });
+    }
+
+    /* --------------------------- STATE & UI --------------------------- */
+    const newsEs=document.getElementById('news-es'),newsEn=document.getElementById('news-en'),
+          loadBtn=document.getElementById('load-more'),apiStatus=document.getElementById('api-status');
+    let pageEs=1, pageEn=1, allEs=[], allEn=[], loading=false;
+
+    async function loadMore(){
+      if(loading) return;
+      loading=true;loadBtn.disabled=true;loadBtn.textContent='Cargando…';apiStatus.style.display='block';
+      const [newEs,newEn]=await Promise.all([fetchNews('es',pageEs),fetchNews('en',pageEn)]);
+      if(newEs.length) allEs=allEs.concat(newEs);
+      if(newEn.length) allEn=allEn.concat(newEn);
+      const showEs=allEs.slice(0,pageEs*ARTICLES_PER_PAGE);
+      const showEn=allEn.slice(0,pageEn*ARTICLES_PER_PAGE);
+      render(showEs,newsEs,'es');render(showEn,newsEn,'en');
+      if(newEs.length||newEn.length){
+        pageEs++;pageEn++;loadBtn.disabled=false;loadBtn.textContent='Cargar más noticias';loadBtn.style.display='block';
+      }else{
+        loadBtn.style.display='none';
+        const msg=document.createElement('div');msg.className='error-message';
+        msg.style.background='#1a2e1a';msg.style.color='#90EE90';msg.style.borderLeftColor='#4caf50';
+        msg.innerHTML='<i class="fas fa-info-circle"></i> No hay más noticias disponibles.';
+        loadBtn.parentNode.insertBefore(msg,loadBtn.nextSibling);
+      }
+      loading=false;
+    }
+    loadBtn.addEventListener('click',loadMore);
+    window.addEventListener('DOMContentLoaded',loadMore);
+  </script>
+</body>
+</html>
