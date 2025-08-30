@@ -3,86 +3,323 @@
 <head>
   <meta charset="UTF-8">
   <title>Noticias sobre Ciencias Ocultas</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#8b0000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    :root{
-      --bg:#0f0f23;
-      --card:#1a1a2e;
-      --accent:#8b0000;
-      --text:#f0f0f0;
-      --muted:#b3b3b3;
-      --col-es:#2a1810;
-      --col-en:#1a1a2e;
+    :root {
+      --bg: #f7f9fc;
+      --card: #fff;
+      --accent: #8b0000;
+      --text: #333;
+      --muted: #777;
+      --column-bg-es: #f9e8e8;
+      --column-bg-en: #e8e8f9;
     }
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);padding:30px 15px;}
-    header{text-align:center;margin-bottom:40px;}header h1{font-size:2.2rem;font-weight:600;}header p{color:var(--muted);}
-    .columns-container{display:flex;flex-wrap:wrap;gap:25px;max-width:1400px;margin:auto;justify-content:center;}
-    .column{flex:1;min-width:300px;background:var(--card);border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.4);}
-    .column-es{background:var(--col-es);}.column-en{background:var(--col-en);}
-    .column-header{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid var(--accent);}
-    .news-grid{display:grid;grid-template-columns:1fr;gap:20px;}
-    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 4px 8px rgba(0,0,0,.6);transition:.3s;display:flex;flex-direction:column;}
-    .card:hover{transform:translateY(-4px);box-shadow:0 6px 12px rgba(139,0,0,.3);}
-    .card img{width:100%;height:180px;object-fit:cover;transition:opacity .3s ease;}
-    .card-content{padding:18px;flex:1;display:flex;flex-direction:column;}
-    .card-content h3{font-size:1.1rem;margin-bottom:10px;}
-    .card-content .source,.card-content .date{font-size:.85rem;color:var(--muted);margin-bottom:8px;}
-    .card-content .date{color:var(--accent);}
-    .card-content .description{font-size:.9rem;color:var(--muted);margin-bottom:12px;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-    .card-content a{margin-top:auto;align-self:flex-start;color:var(--accent);font-weight:600;text-decoration:none;}
-    .card-content a:hover{text-decoration:underline;}
-    .loading{text-align:center;padding:60px;color:var(--muted);}
-    .load-more{display:block;margin:30px auto;padding:12px 28px;border:none;border-radius:30px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:.3s;box-shadow:0 2px 6px rgba(0,0,0,.3);}
-    .load-more:hover{background:#660000;transform:translateY(-2px);}
-    .load-more:disabled{background:var(--muted);cursor:not-allowed;}
-    .error-message{background:#2a1810;color:#ff6b6b;padding:15px;border-radius:8px;margin:10px 0;border-left:4px solid var(--accent);text-align:center;}
-    .api-status{background:#1a2e1a;color:#90EE90;padding:10px 15px;border-radius:8px;margin:10px auto;max-width:600px;border-left:4px solid #4caf50;text-align:center;font-size:.9rem;}
-    .failed-image{opacity:.9;background:#e0e0e0;}
-    @media(max-width:768px){.columns-container{flex-direction:column;}}
+    *, *::before, *::after {margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family: 'Poppins', sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:20px 12px;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    header{
+      text-align:center;
+      margin-bottom:30px;
+      position: relative;
+    }
+    header h1{
+      font-size:1.8rem;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+    header p{
+      color:var(--muted);
+      font-size:0.95rem;
+      margin-bottom: 20px;
+    }
+    .language-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .language-toggle:active {
+      transform: scale(0.95);
+    }
+    .column{
+      background:var(--card);
+      border-radius:12px;
+      padding:18px;
+      box-shadow:0 3px 10px rgba(0,0,0,.08);
+      width: 100%;
+      display: none;
+    }
+    .column.active {
+      display: block;
+    }
+    .column-es{
+      background:var(--column-bg-es);
+      display: block; /* Mostrar español por defecto */
+    }
+    .column-en{
+      background:var(--column-bg-en);
+    }
+    .column-header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:18px;
+      padding-bottom:10px;
+      border-bottom:2px solid var(--accent);
+    }
+    .column-header h2 {
+      font-size:1.3rem;
+    }
+    .news-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 3px 6px rgba(0,0,0,.06);
+      transition:transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:active{
+      transform: scale(0.98);
+    }
+    .card img{
+      width:100%;
+      height:160px;
+      object-fit:cover;
+    }
+    .card-content{
+      padding:16px;
+    }
+    .card-content h3{
+      font-size:1.05rem;
+      line-height:1.4;
+      margin-bottom:10px;
+    }
+    .card-content .source{
+      font-size:.82rem;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    .card-content .date{
+      font-size:.78rem;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    .card-content .description{
+      font-size:.87rem;
+      color:var(--muted);
+      margin-bottom:12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-content a{
+      display: inline-block;
+      color:var(--accent);
+      font-weight:600;
+      text-decoration:none;
+      padding: 4px 0;
+    }
+    .loading{
+      text-align:center;
+      padding:50px 20px;
+      color:var(--muted);
+    }
+    .load-more{
+      display:block;
+      margin:25px auto;
+      padding:14px 30px;
+      border:none;
+      border-radius:30px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:.3s;
+      box-shadow:0 2px 6px rgba(0,0,0,.1);
+      min-width: 180px;
+      min-height: 48px;
+      touch-action: manipulation;
+    }
+    .load-more:active{
+      background:#660000;
+      transform:scale(0.97);
+    }
+    .load-more:disabled{
+      background:var(--muted);
+      cursor:not-allowed;
+    }
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      border-left: 4px solid #c62828;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .api-status {
+      background: #e8f5e8;
+      color: #2e7d32;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin: 10px auto;
+      max-width: 600px;
+      border-left: 4px solid #4caf50;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    .back-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: var(--muted);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    @media(max-width:768px){
+      header h1 {
+        font-size: 1.6rem;
+        padding-right: 100px; /* Espacio para el botón */
+      }
+      .column-header h2 {
+        font-size: 1.2rem;
+      }
+      .card img {
+        height: 140px;
+      }
+    }
+    @media(max-width:480px){
+      body {
+        padding: 15px 10px;
+      }
+      header {
+        margin-bottom: 20px;
+      }
+      header h1 {
+        font-size: 1.4rem;
+        padding-right: 90px;
+      }
+      .language-toggle {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      .card-content {
+        padding: 14px;
+      }
+      .card-content h3 {
+        font-size: 1rem;
+      }
+      .news-grid {
+        gap: 15px;
+      }
+    }
+    /* Animations for cards */
+    .card {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
-
 <body>
   <header>
     <h1><i class="fas fa-moon"></i> Noticias sobre Ciencias Ocultas</h1>
     <p>Últimas novedades sobre ocultismo, brujería, fenómenos paranormales y lo sobrenatural</p>
+    <button id="language-toggle" class="language-toggle">
+      <i class="fas fa-language"></i> Ver en inglés
+    </button>
   </header>
 
-  <div id="api-status" class="api-status" style="display:none;">
-    <i class="fas fa-check-circle"></i> Conectado a APIs de noticias en tiempo real
+  <div id="api-status" class="api-status" style="display: none;">
+    <i class="fas fa-check-circle"></i> 
+    Conectado a APIs de noticias en tiempo real
   </div>
 
-  <div class="columns-container">
-    <div class="column column-es">
-      <div class="column-header"><i class="fas fa-language"></i><h2>Noticias en Español</h2></div>
-      <div id="news-es" class="news-grid"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando…</div></div>
+  <!-- Columna en Español (visible por defecto) -->
+  <div id="column-es" class="column column-es">
+    <div class="column-header">
+      <i class="fas fa-language"></i>
+      <h2>Noticias en Español</h2>
     </div>
-
-    <div class="column column-en">
-      <div class="column-header"><i class="fas fa-language"></i><h2>News in English</h2></div>
-      <div id="news-en" class="news-grid"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+    <div id="news-es" class="news-grid">
+      <div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando noticias…</div>
     </div>
+    <button id="load-more-es" class="load-more">Cargar más noticias</button>
   </div>
 
-  <button id="load-more" class="load-more">Cargar más noticias</button>
+  <!-- Columna en Inglés (oculta por defecto) -->
+  <div id="column-en" class="column column-en">
+    <div class="column-header">
+      <i class="fas fa-language"></i>
+      <h2>News in English</h2>
+    </div>
+    <div id="news-en" class="news-grid">
+      <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading news…</div>
+    </div>
+    <button id="load-more-en" class="load-more">Load more news</button>
+    <button id="back-button" class="back-button">Volver a español</button>
+  </div>
 
   <script>
-    /* --------------------------- API KEYS --------------------------- */
-    const KEYS = {
-      GNEWS:   '42dd93284a0abf72a9a646d3b4a9c33e',
+    // API Configuration
+    const API_KEYS = {
+      GNEWS: '42dd93284a0abf72a9a646d3b4a9c33e',
       NEWSAPI: 'aaf83dcbd8694668ad89247b959db678',
-      NEWSDATA:'pub_a6e9ca27cc1644bf9a1cff0b8686b3eb',
-      THE_NEWS:'api_live_jXhP97cJw1oAwTrL50pkwaWmHq4HE2xBLnqgtDTu8e',
-      NYT:     'Eh3k0BwkVhNGIWmkxaSVDGnZMIW5HxOT',
-      GUARDIAN:'f88b103a-4f1d-4f19-a5e8-75124f32fb65'
+      NEWSDATA: 'pub_a6e9ca27cc1644bf9a1cff0b8686b3eb',
+      THE_NEWS: 'api_live_jXhP97cJw1oAwTrL50pkwaWmHq4HE2xBLnqgtDTu8e',
+      NYT: 'Eh3k0BwkVhNGIWmkxaSVDGnZMIW5HxOT',
+      GUARDIAN: 'f88b103a-4f1d-4f19-a5e8-75124f32fb65'
     };
 
-    /* --------------------------- CONFIG --------------------------- */
-    const ARTICLES_PER_PAGE = 6;
-    const OCCULT_KEYWORDS = [
+    const articlesPerPage = 6;
+    
+    // Keywords for occult-related content
+    const occultKeywords = [
       'ocultismo','brujería','brujo','bruja','hechizo','ritual','satán','demonio',
       'fantasma','espíritu','aparición','casa embrujada','exorcismo','paranormal',
       'sobrenatural','psíquico','telepatía','clarividencia','ouija','sesión',
@@ -92,175 +329,498 @@
       'spirit','haunted','exorcism','paranormal','supernatural','psychic',
       'telepathy','precognition','clairvoyant','seance','cryptid','ufology'
     ];
-    const FALSE_POSITIVES = ['tea','herbal tea','chai','green tea','black tea','tea party'];
-    const FALLBACK_IMG = {
-      es:'https://via.placeholder.com/400x250/8b0000/ffffff?text=Ocultismo',
-      en:'https://via.placeholder.com/400x250/8b0000/ffffff?text=Occult'
-    };
 
-    /* --------------------------- UTILS --------------------------- */
-    const seenEs = new Set(), seenEn = new Set();
-    function safeDate(str){const d=new Date(str);return isNaN(d)?new Date():d;}
-    function generateId(a){return (a.title||'').substring(0,30).replace(/\s+/g,'_')+'_'+(a.source?.name||'noSource');}
-    function isOccult(a){
-      if(!a.title && !a.description) return false;
-      const txt=(a.title+' '+(a.description||'')).toLowerCase();
-      if(FALSE_POSITIVES.some(t=>txt.includes(t))) return false;
-      return OCCULT_KEYWORDS.some(k=>txt.includes(k));
+    // Terms that might cause false positives
+    const falsePositiveTerms = ['tea','herbal tea','chai','green tea','black tea','tea party'];
+
+    // DOM references
+    const newsEsContainer = document.getElementById('news-es');
+    const newsEnContainer = document.getElementById('news-en');
+    const loadMoreEsBtn = document.getElementById('load-more-es');
+    const loadMoreEnBtn = document.getElementById('load-more-en');
+    const apiStatus = document.getElementById('api-status');
+    const languageToggle = document.getElementById('language-toggle');
+    const backButton = document.getElementById('back-button');
+    const columnEs = document.getElementById('column-es');
+    const columnEn = document.getElementById('column-en');
+
+    // State
+    let currentPageEs = 1;
+    let currentPageEn = 1;
+    let allArticlesEs = [];
+    let allArticlesEn = [];
+    let isLoadingEs = false;
+    let isLoadingEn = false;
+    let seenArticleIdsEs = new Set();
+    let seenArticleIdsEn = new Set();
+
+    // Generate a unique ID for an article based on title and source
+    function generateArticleId(article) {
+      const titlePart = article.title ? article.title.substring(0, 30).replace(/\s+/g, '_') : 'no_title';
+      const sourcePart = article.source && article.source.name ? 
+                         article.source.name.replace(/\s+/g, '_') : 'no_source';
+      return `${titlePart}_${sourcePart}`;
     }
-    function filterDup(arts,set){
-      return arts.filter(a=>{const id=generateId(a);if(set.has(id))return false;set.add(id);return true});
-    }
-    function fixImage(url){
+
+    // Fix image URLs
+    function fixImage(url) {
       if(!url || url.length<10) return null;
       if(url.startsWith('//')) return 'https:'+url;
       if(url.startsWith('/')) return 'https://static01.nyt.com'+url;
       return url;
     }
-    const proxy=u=>'https://corsproxy.io/?'+encodeURIComponent(u);
 
-    /* --------------------------- FETCHERS --------------------------- */
-    /* 1. GNews (working) */
-    async function fetchGNews(lang,page){
-      try{
-        const q=lang==='es'?'ocultismo OR brujería OR paranormal':'occult OR witchcraft OR paranormal';
-        const url=`https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=${lang}&max=10&page=${page}&apikey=${KEYS.GNEWS}`;
-        const res=await fetch(url); const data=await res.json();
-        return (data.articles||[]).map(a=>({...a,urlToImage:fixImage(a.image)}));
-      }catch{return []}
-    }
-
-    /* 2. NewsAPI (working) */
-    async function fetchNewsAPI(lang,page){
-      try{
-        const q=lang==='es'?'ocultismo OR brujería OR paranormal':'occult OR witchcraft OR paranormal';
-        const from=new Date(Date.now()-30*864e5).toISOString().split('T')[0];
-        const target=`https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&language=${lang}&from=${from}&sortBy=publishedAt&pageSize=20&page=${page}&apiKey=${KEYS.NEWSAPI}`;
-        const res=await fetch(proxy(target)); const data=await res.json();
-        return (data.articles||[]).map(a=>({...a,urlToImage:fixImage(a.urlToImage)}));
-      }catch{return []}
-    }
-
-    /* 3. NewsData (working) */
-    async function fetchNewsData(lang,page){
-      try{
-        const q=lang==='es'?'ocultismo,brujería,paranormal':'occult,witchcraft,paranormal';
-        const url=`https://newsdata.io/api/1/news?apikey=${KEYS.NEWSDATA}&q=${q}&language=${lang}&page=${page}`;
-        const res=await fetch(url); const data=await res.json();
-        return (data.results||[]).map(a=>({
-          title:a.title,description:a.description,url:a.link,urlToImage:fixImage(a.image_url),publishedAt:a.pubDate,source:{name:a.source_id}
-        }));
-      }catch{return []}
-    }
-
-    /* 4. TheNewsAPI (working) */
-    async function fetchTheNews(lang,page){
-      try{
-        const q=lang==='es'?'brujería OR ocultismo':'witchcraft OR occult';
-        const url=`https://api.thenewsapi.com/v1/news/all?api_token=${KEYS.THE_NEWS}&q=${encodeURIComponent(q)}&language=${lang}&limit=10&page=${page}`;
-        const res=await fetch(url); const data=await res.json();
-        return (data.data||[]).map(a=>({
-          title:a.title,description:a.description,url:a.url,urlToImage:fixImage(a.image_url),publishedAt:a.published_at,source:{name:a.source}
-        }));
-      }catch{return []}
-    }
-
-    /* 5. The Guardian (new key) */
-    async function fetchGuardian(lang,page){
-      try{
-        const q=lang==='es'?'brujería OR paranormal':'witchcraft OR paranormal';
-        const url=`https://content.guardianapis.com/search?q=${encodeURIComponent(q)}&api-key=${KEYS.GUARDIAN}&show-fields=thumbnail,trailText&page-size=10&page=${page}`;
-        const res=await fetch(proxy(url)); const data=await res.json();
-        return (data.response?.results||[]).map(a=>({
-          title:a.webTitle,description:a.fields?.trailText||'',url:a.webUrl,urlToImage:fixImage(a.fields?.thumbnail),publishedAt:a.webPublicationDate,source:{name:'The Guardian'}
-        }));
-      }catch{return []}
-    }
-
-    /* 6. New York Times (new key) */
-    async function fetchNYT(lang,page){
-      try{
-        const q=lang==='es'?'brujería':'witchcraft';
-        const url=`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${encodeURIComponent(q)}&api-key=${KEYS.NYT}&page=${page-1}`;
-        const res=await fetch(proxy(url)); const data=await res.json();
-        return (data.response?.docs||[]).map(a=>({
-          title:a.headline.main,description:a.snippet||'',url:a.web_url,urlToImage:fixImage(a.multimedia?.[0]?.url),publishedAt:a.pub_date,source:{name:'NYT'}
-        }));
-      }catch{return []}
-    }
-
-    /* --------------------------- MAIN FETCH --------------------------- */
-    async function fetchNews(lang,page){
-      const set = lang==='es'?seenEs:seenEn;
-      const providers = [
-        ()=>fetchGNews(lang,page),
-        ()=>fetchNewsAPI(lang,page),
-        ()=>fetchNewsData(lang,page),
-        ()=>fetchTheNews(lang,page),
-        ()=>fetchGuardian(lang,page),
-        ()=>fetchNYT(lang,page)
-      ];
-      let out=[];
-      for(const fn of providers){
-        const arr=await fn();
-        out=out.concat(filterDup(arr,set));
-        if(out.length>=10) break;
+    // Improved function to check if article is occult-related
+    function isOccultRelated(article) {
+      if (!article.title && !article.description) return false;
+      
+      const text = (article.title + ' ' + (article.description || '')).toLowerCase();
+      
+      // First check for false positives (terms that indicate it's NOT about occult)
+      const isFalsePositive = falsePositiveTerms.some(term => 
+        text.includes(term.toLowerCase())
+      );
+      
+      if (isFalsePositive) {
+        return false;
       }
-      return out;
+      
+      // Then check for occult-related keywords
+      const isRelated = occultKeywords.some(keyword => 
+        text.includes(keyword.toLowerCase())
+      );
+      
+      return isRelated;
     }
 
-    /* --------------------------- RENDER --------------------------- */
-    function render(arts,container,lang){
-      if(!arts.length){
-        container.innerHTML=`<div class="error-message"><i class="fas fa-exclamation-circle"></i>${lang==='es'?'No se encontraron noticias.':'No occult news found.'}</div>`;
-        return;
-      }
-      container.innerHTML='';
-      arts.forEach((a,i)=>{
-        const date=safeDate(a.publishedAt).toLocaleDateString(lang==='es'?'es-ES':'en-US',{year:'numeric',month:'long',day:'numeric'});
-        const card=document.createElement('div');card.className='card';
-        card.innerHTML=`
-          <img src="${a.urlToImage||FALLBACK_IMG[lang]}" alt="${a.title}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG[lang]}';this.classList.add('failed-image')">
-          <div class="card-content">
-            <span class="date">${date}</span>
-            <h3>${a.title}</h3>
-            <div class="source"><i class="fas fa-newspaper"></i> ${a.source?.name||'Desconocido'}</div>
-            ${a.description?`<div class="description">${a.description}</div>`:''}
-            <a href="${a.url}" target="_blank" rel="noopener noreferrer">${lang==='es'?'Leer más →':'Read more →'}</a>
-          </div>`;
-        card.style.opacity='0';card.style.transform='translateY(20px)';
-        container.appendChild(card);
-        setTimeout(()=>{card.style.transition='opacity .3s ease, transform .3s ease';card.style.opacity='1';card.style.transform='translateY(0)';},i*100);
+    // Filter out duplicate articles
+    function filterDuplicates(articles, seenIds) {
+      return articles.filter(article => {
+        const articleId = generateArticleId(article);
+        if (seenIds.has(articleId)) {
+          return false;
+        }
+        seenIds.add(articleId);
+        return true;
       });
     }
 
-    /* --------------------------- STATE & UI --------------------------- */
-    const newsEs=document.getElementById('news-es'),newsEn=document.getElementById('news-en'),
-          loadBtn=document.getElementById('load-more'),apiStatus=document.getElementById('api-status');
-    let pageEs=1, pageEn=1, allEs=[], allEn=[], loading=false;
-
-    async function loadMore(){
-      if(loading) return;
-      loading=true;loadBtn.disabled=true;loadBtn.textContent='Cargando…';apiStatus.style.display='block';
-      const [newEs,newEn]=await Promise.all([fetchNews('es',pageEs),fetchNews('en',pageEn)]);
-      if(newEs.length) allEs=allEs.concat(newEs);
-      if(newEn.length) allEn=allEn.concat(newEn);
-      const showEs=allEs.slice(0,pageEs*ARTICLES_PER_PAGE);
-      const showEn=allEn.slice(0,pageEn*ARTICLES_PER_PAGE);
-      render(showEs,newsEs,'es');render(showEn,newsEn,'en');
-      if(newEs.length||newEn.length){
-        pageEs++;pageEn++;loadBtn.disabled=false;loadBtn.textContent='Cargar más noticias';loadBtn.style.display='block';
-      }else{
-        loadBtn.style.display='none';
-        const msg=document.createElement('div');msg.className='error-message';
-        msg.style.background='#1a2e1a';msg.style.color='#90EE90';msg.style.borderLeftColor='#4caf50';
-        msg.innerHTML='<i class="fas fa-info-circle"></i> No hay más noticias disponibles.';
-        loadBtn.parentNode.insertBefore(msg,loadBtn.nextSibling);
+    // Fetch from GNews API
+    async function fetchFromGNews(lang, page = 1) {
+      try {
+        const query = lang === 'es' ? 'ocultismo OR brujería OR paranormal' : 'occult OR witchcraft OR paranormal';
+        const country = lang === 'es' ? 'es' : 'us';
+        
+        const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=${lang}&country=${country}&max=10&apikey=${API_KEYS.GNEWS}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.articles) {
+          return data.articles
+            .filter(article => 
+              article.title && 
+              article.url && 
+              article.source &&
+              !article.title.toLowerCase().includes('[removed]') &&
+              isOccultRelated(article)
+            )
+            .map(article => ({
+              ...article,
+              urlToImage: fixImage(article.image)
+            }));
+        }
+        return [];
+      } catch (error) {
+        console.warn('GNews API error:', error);
+        return [];
       }
-      loading=false;
     }
-    loadBtn.addEventListener('click',loadMore);
-    window.addEventListener('DOMContentLoaded',loadMore);
+
+    // Fetch from NewsAPI
+    async function fetchFromNewsAPI(lang, page = 1) {
+      try {
+        const query = lang === 'es' ? 'ocultismo OR brujería OR paranormal' : 'occult OR witchcraft OR paranormal';
+        const from = new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0];
+        
+        const proxyUrl = 'https://corsproxy.io/?';
+        const targetUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${lang}&from=${from}&sortBy=publishedAt&pageSize=20&page=${page}&apiKey=${API_KEYS.NEWSAPI}`;
+        
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+        const data = await response.json();
+        
+        if (data.articles) {
+          return data.articles.filter(article => 
+            article.title && 
+            article.url && 
+            article.source &&
+            !article.title.toLowerCase().includes('[removed]') &&
+            isOccultRelated(article)
+          ).map(article => ({
+            ...article,
+            urlToImage: fixImage(article.urlToImage)
+          }));
+        }
+        return [];
+      } catch (error) {
+        console.warn('NewsAPI error:', error);
+        return [];
+      }
+    }
+
+    // Fetch from NewsData API
+    async function fetchFromNewsData(lang, page = 1) {
+      try {
+        const query = lang === 'es' ? 'ocultismo,brujería,paranormal' : 'occult,witchcraft,paranormal';
+        const language = lang === 'es' ? 'es' : 'en';
+        
+        const url = `https://newsdata.io/api/1/news?apikey=${API_KEYS.NEWSDATA}&q=${query}&language=${language}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.results) {
+          return data.results.filter(article => 
+            article.title && 
+            article.link && 
+            article.source_id &&
+            isOccultRelated(article)
+          ).map(article => ({
+            title: article.title,
+            description: article.description,
+            url: article.link,
+            urlToImage: fixImage(article.image_url),
+            publishedAt: article.pubDate,
+            source: { name: article.source_id }
+          }));
+        }
+        return [];
+      } catch (error) {
+        console.warn('NewsData API error:', error);
+        return [];
+      }
+    }
+
+    // Fetch from TheNewsAPI
+    async function fetchFromTheNews(lang, page = 1) {
+      try {
+        const query = lang === 'es' ? 'brujería OR ocultismo' : 'witchcraft OR occult';
+        const url = `https://api.thenewsapi.com/v1/news/all?api_token=${API_KEYS.THE_NEWS}&q=${encodeURIComponent(query)}&language=${lang}&limit=10&page=${page}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.data) {
+          return data.data.filter(article => 
+            article.title && 
+            article.url && 
+            article.source &&
+            isOccultRelated(article)
+          ).map(article => ({
+            title: article.title,
+            description: article.description,
+            url: article.url,
+            urlToImage: fixImage(article.image_url),
+            publishedAt: article.published_at,
+            source: { name: article.source }
+          }));
+        }
+        return [];
+      } catch (error) {
+        console.warn('TheNewsAPI error:', error);
+        return [];
+      }
+    }
+
+    // Main fetch function that tries all APIs
+    async function fetchNews(lang, page = 1) {
+      let articles = [];
+      const seenIds = lang === 'es' ? seenArticleIdsEs : seenArticleIdsEn;
+      
+      try {
+        // Try GNews first (usually fastest and most reliable)
+        console.log(`Fetching from GNews API for ${lang}...`);
+        let gnewsArticles = await fetchFromGNews(lang, page);
+        gnewsArticles = filterDuplicates(gnewsArticles, seenIds);
+        articles = [...articles, ...gnewsArticles];
+        
+        // Si no tenemos suficientes artículos, intentamos con NewsAPI
+        if (articles.length < 5) {
+          console.log(`Trying NewsAPI for ${lang}...`);
+          let newsApiArticles = await fetchFromNewsAPI(lang, page);
+          newsApiArticles = filterDuplicates(newsApiArticles, seenIds);
+          articles = [...articles, ...newsApiArticles];
+        }
+        
+        // Si todavía no tenemos suficientes, intentamos con NewsData
+        if (articles.length < 5) {
+          console.log(`Trying NewsData for ${lang}...`);
+          let newsDataArticles = await fetchFromNewsData(lang, page);
+          newsDataArticles = filterDuplicates(newsDataArticles, seenIds);
+          articles = [...articles, ...newsDataArticles];
+        }
+        
+        // Intentamos con TheNewsAPI
+        if (articles.length < 5) {
+          console.log(`Trying TheNewsAPI for ${lang}...`);
+          let theNewsArticles = await fetchFromTheNews(lang, page);
+          theNewsArticles = filterDuplicates(theNewsArticles, seenIds);
+          articles = [...articles, ...theNewsArticles];
+        }
+
+        console.log(`Found ${articles.length} unique articles for ${lang}`);
+        return articles;
+
+      } catch (error) {
+        console.error(`Error fetching news for ${lang}:`, error);
+        return [];
+      }
+    }
+
+    // Render articles
+    function renderArticles(articles, container, lang) {
+      if (!articles.length) {
+        container.innerHTML = `<div class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          ${lang === 'es' ? 
+            'No se encontraron noticias sobre ciencias ocultas en este momento.' : 
+            'No occult-related news found at this time.'}
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      articles.forEach((article, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        const publishedDate = new Date(article.publishedAt);
+        const formattedDate = publishedDate.toLocaleDateString(
+          lang === 'es' ? 'es-ES' : 'en-US',
+          { year: 'numeric', month: 'long', day: 'numeric' }
+        );
+        
+        const fallbackImage = lang === 'es' ? 
+          'https://via.placeholder.com/400x250/8b0000/ffffff?text=Ocultismo' : 
+          'https://via.placeholder.com/400x250/8b0000/ffffff?text=Occult';
+        
+        card.innerHTML = `
+          <img src="${article.urlToImage || fallbackImage}" 
+               alt="${article.title}" 
+               loading="lazy"
+               onerror="this.src='${fallbackImage}'">
+          <div class="card-content">
+            <span class="date">${formattedDate}</span>
+            <h3>${article.title}</h3>
+            <div class="source"><i class="fas fa-newspaper"></i> ${article.source.name || 'Unknown Source'}</div>
+            ${article.description ? `<div class="description">${article.description}</div>` : ''}
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+              ${lang === 'es' ? 'Leer más →' : 'Read more →'}
+            </a>
+          </div>
+        `;
+        
+        container.appendChild(card);
+        
+        // Animate card appearance with requestAnimationFrame for better performance
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            card.classList.add('visible');
+          }, index * 100);
+        });
+      });
+    }
+
+    // Load and display articles for Spanish
+    async function loadAndShowArticlesEs() {
+      if (isLoadingEs) return;
+      
+      isLoadingEs = true;
+      loadMoreEsBtn.disabled = true;
+      loadMoreEsBtn.textContent = 'Cargando...';
+
+      try {
+        // Show API status
+        apiStatus.style.display = 'block';
+
+        // Load articles for Spanish
+        const newArticlesEs = await fetchNews('es', currentPageEs);
+
+        // Add new articles to existing ones
+        if (newArticlesEs.length > 0) {
+          allArticlesEs = [...allArticlesEs, ...newArticlesEs];
+        }
+
+        // Calculate articles to show
+        const articlesToShowEs = allArticlesEs.slice(0, currentPageEs * articlesPerPage);
+
+        // Render articles
+        renderArticles(articlesToShowEs, newsEsContainer, 'es');
+
+        // Update pagination
+        const hasNewEs = newArticlesEs.length > 0;
+
+        if (hasNewEs) {
+          currentPageEs++;
+          loadMoreEsBtn.disabled = false;
+          loadMoreEsBtn.textContent = 'Cargar más noticias';
+          loadMoreEsBtn.style.display = 'block';
+        } else {
+          loadMoreEsBtn.style.display = 'none';
+          
+          // Mostrar mensaje si no hay más noticias
+          if (currentPageEs > 1) {
+            const noMoreNews = document.createElement('div');
+            noMoreNews.className = 'error-message';
+            noMoreNews.style.background = '#e8f5e8';
+            noMoreNews.style.color = '#2e7d32';
+            noMoreNews.style.borderLeftColor = '#4caf50';
+            noMoreNews.innerHTML = `<i class="fas fa-info-circle"></i> No hay más noticias disponibles.`;
+            
+            loadMoreEsBtn.parentNode.insertBefore(noMoreNews, loadMoreEsBtn.nextSibling);
+          }
+        }
+
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        
+        if (allArticlesEs.length === 0) {
+          newsEsContainer.innerHTML = `<div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> 
+            Error al conectar con las APIs de noticias. Verifica tu conexión a internet.
+          </div>`;
+        }
+        
+        loadMoreEsBtn.disabled = false;
+        loadMoreEsBtn.textContent = 'Cargar más noticias';
+      } finally {
+        isLoadingEs = false;
+      }
+    }
+
+    // Load and display articles for English
+    async function loadAndShowArticlesEn() {
+      if (isLoadingEn) return;
+      
+      isLoadingEn = true;
+      loadMoreEnBtn.disabled = true;
+      loadMoreEnBtn.textContent = 'Loading...';
+
+      try {
+        // Show API status
+        apiStatus.style.display = 'block';
+
+        // Load articles for English
+        const newArticlesEn = await fetchNews('en', currentPageEn);
+
+        // Add new articles to existing ones
+        if (newArticlesEn.length > 0) {
+          allArticlesEn = [...allArticlesEn, ...newArticlesEn];
+        }
+
+        // Calculate articles to show
+        const articlesToShowEn = allArticlesEn.slice(0, currentPageEn * articlesPerPage);
+
+        // Render articles
+        renderArticles(articlesToShowEn, newsEnContainer, 'en');
+
+        // Update pagination
+        const hasNewEn = newArticlesEn.length > 0;
+
+        if (hasNewEn) {
+          currentPageEn++;
+          loadMoreEnBtn.disabled = false;
+          loadMoreEnBtn.textContent = 'Load more news';
+          loadMoreEnBtn.style.display = 'block';
+        } else {
+          loadMoreEnBtn.style.display = 'none';
+          
+          // Mostrar mensaje si no hay más noticias
+          if (currentPageEn > 1) {
+            const noMoreNews = document.createElement('div');
+            noMoreNews.className = 'error-message';
+            noMoreNews.style.background = '#e8f5e8';
+            noMoreNews.style.color = '#2e7d32';
+            noMoreNews.style.borderLeftColor = '#4caf50';
+            noMoreNews.innerHTML = `<i class="fas fa-info-circle"></i> No more news available.`;
+            
+            loadMoreEnBtn.parentNode.insertBefore(noMoreNews, loadMoreEnBtn.nextSibling);
+          }
+        }
+
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        
+        if (allArticlesEn.length === 0) {
+          newsEnContainer.innerHTML = `<div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> 
+            Error connecting to news APIs. Please check your internet connection.
+          </div>`;
+        }
+        
+        loadMoreEnBtn.disabled = false;
+        loadMoreEnBtn.textContent = 'Load more news';
+      } finally {
+        isLoadingEn = false;
+      }
+    }
+
+    // Toggle between languages
+    function toggleLanguage() {
+      if (columnEs.style.display === 'block') {
+        // Switch to English
+        columnEs.style.display = 'none';
+        columnEn.style.display = 'block';
+        languageToggle.innerHTML = '<i class="fas fa-language"></i> Ver en español';
+        
+        // Load English articles if not loaded yet
+        if (allArticlesEn.length === 0) {
+          loadAndShowArticlesEn();
+        }
+      } else {
+        // Switch to Spanish
+        columnEn.style.display = 'none';
+        columnEs.style.display = 'block';
+        languageToggle.innerHTML = '<i class="fas fa-language"></i> Ver en inglés';
+      }
+    }
+
+    // Event listeners
+    loadMoreEsBtn.addEventListener('click', loadAndShowArticlesEs);
+    loadMoreEnBtn.addEventListener('click', loadAndShowArticlesEn);
+    languageToggle.addEventListener('click', toggleLanguage);
+    backButton.addEventListener('click', function() {
+      columnEn.style.display = 'none';
+      columnEs.style.display = 'block';
+      languageToggle.innerHTML = '<i class="fas fa-language"></i> Ver en inglés';
+    });
+
+    // Add touch events for better mobile experience
+    [loadMoreEsBtn, loadMoreEnBtn, languageToggle, backButton].forEach(btn => {
+      btn.addEventListener('touchstart', function() {
+        this.style.transform = 'scale(0.97)';
+      }, { passive: true });
+      
+      btn.addEventListener('touchend', function() {
+        this.style.transform = '';
+      }, { passive: true });
+    });
+
+    // Initial load for Spanish
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initial load with a small delay to allow rendering
+      setTimeout(loadAndShowArticlesEs, 100);
+    });
+
+    // Prevent zoom on double-tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
   </script>
 </body>
 </html>
