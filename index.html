@@ -2,19 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ciencias Ocultas Tenebrosas</title>
+    <title>Noticias de Ciencias Ocultas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Creepster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0a0408;
-            --card: #1a0510;
+            --bg: #f8f5f5;
+            --card: #fff;
             --accent: #8b0000;
-            --text: #e8e8e8;
-            --muted: #a0a0a0;
-            --blood: #8b0000;
-            --shadow: rgba(0, 0, 0, 0.7);
+            --text: #333;
+            --muted: #777;
         }
         
         * {
@@ -24,13 +22,11 @@
         }
         
         body {
-            font-family: 'MedievalSharp', cursive;
+            font-family: 'Poppins', sans-serif;
             background: var(--bg);
             color: var(--text);
             padding: 30px 15px;
             position: relative;
-            min-height: 100vh;
-            overflow-x: hidden;
         }
         
         body::before {
@@ -40,70 +36,20 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cpath d='M200,50 Q250,30 280,80 T350,150 T300,250 T200,350 T100,250 T50,150 T120,80 T200,50' fill='none' stroke='%238b0000' stroke-width='1' opacity='0.05'/%3E%3Cpath d='M150,100 Q180,70 220,90 T280,140 T250,200 T180,250 T100,220 T70,150 T100,100 T150,100' fill='none' stroke='%238b0000' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E"),
-                radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(139, 0, 0, 0.1) 0%, transparent 40%);
-            background-size: 300px, 800px 800px, 600px 600px;
-            background-position: center, 20% 30%, 80% 70%;
-            opacity: 0.4;
-            z-index: -3;
-        }
-        
-        /* Siluetas de árboles muertos en los bordes */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 600'%3E%3Cpath d='M0,600 L20,550 L10,500 L30,450 L15,400 L25,350 L5,300 L20,250 L0,200 L30,150 L10,100 L35,50 L15,0 L0,0 Z' fill='%23000' opacity='0.7'/%3E%3Cpath d='M50,600 L70,520 L55,470 L75,420 L60,370 L80,320 L50,280 L70,230 L45,180 L75,130 L50,80 L80,30 L55,0 L50,0 Z' fill='%23000' opacity='0.7'/%3E%3Cpath d='M150,600 L170,520 L155,470 L175,420 L160,370 L180,320 L150,280 L170,230 L145,180 L175,130 L150,80 L180,30 L155,0 L150,0 Z' fill='%23000' opacity='0.7'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 600'%3E%3Cpath d='M200,600 L180,550 L190,500 L170,450 L185,400 L175,350 L195,300 L180,250 L200,200 L170,150 L190,100 L165,50 L185,0 L200,0 Z' fill='%23000' opacity='0.7'/%3E%3Cpath d='M150,600 L130,520 L145,470 L125,420 L140,370 L120,320 L150,280 L130,230 L155,180 L125,130 L150,80 L120,30 L145,0 L150,0 Z' fill='%23000' opacity='0.7'/%3E%3Cpath d='M50,600 L30,520 L45,470 L25,420 L40,370 L20,320 L50,280 L30,230 L55,180 L25,130 L50,80 L20,30 L45,0 L50,0 Z' fill='%23000' opacity='0.7'/%3E%3C/svg%3E");
-            background-position: left bottom, right bottom;
-            background-repeat: repeat-y;
-            background-size: 200px 600px;
-            opacity: 0.9;
-            z-index: -2;
-            pointer-events: none;
-        }
-        
-        /* Ojos que observan desde la oscuridad */
-        .eyes {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M40,5 C25,5 10,15 10,40 C10,65 25,75 40,75 C55,75 70,65 70,40 C70,15 55,5 40,5 Z' fill='none' stroke='%23d8c8c8' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='10' fill='none' stroke='%23d8c8c8' stroke-width='1.5'/%3E%3C/svg%3E");
+            opacity: 0.3;
             z-index: -1;
-        }
-        
-        .eye {
-            position: absolute;
-            width: 30px;
-            height: 15px;
-            background: rgba(139, 0, 0, 0.3);
-            border-radius: 50%;
-            animation: blink 8s infinite alternate;
-        }
-        
-        @keyframes blink {
-            0%, 40%, 44%, 48%, 52%, 56%, 100% { height: 15px; }
-            42%, 46%, 50%, 54% { height: 3px; }
         }
         
         .main-header {
             text-align: center;
             margin: 20px 0 40px;
             padding: 25px;
-            background: linear-gradient(to right, #200000, #000000);
+            background: #8b0000;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 20px rgba(139,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
-            border: 1px solid #3a0000;
         }
         
         .main-header::before {
@@ -113,94 +59,74 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50,15 L60,35 L82,35 L65,50 L75,85 L50,70 L25,85 L35,50 L18,35 L40,35 Z' fill='none' stroke='%238b0000' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='35' fill='none' stroke='%238b0000' stroke-width='1' opacity='0.1'/%3E%3Cline x1='40' y1='5' x2='40' y2='75' stroke='%238b0000' stroke-width='1' opacity='0.1'/%3E%3Cline x1='5' y1='40' x2='75' y2='40' stroke='%238b0000' stroke-width='1' opacity='0.1'/%3E%3C/svg%3E");
-            background-size: 80px, 60px;
-            background-position: 10% 20%, 90% 80%;
-            opacity: 0.3;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='60' viewBox='0 0 100 60'%3E%3Cpath d='M50,10 C35,10 20,20 20,45 C20,70 35,80 50,80 C65,80 80,70 80,45 C80,20 65,10 50,10 Z' fill='none' stroke='%23ffffff' stroke-width='1.5' opacity='0.2'/%3E%3Ccircle cx='50' cy='45' r='5' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E");
+            opacity: 0.2;
         }
         
-        .occult-text {
-            font-family: 'Creepster', cursive;
-            font-size: 4rem;
-            font-weight: 400;
-            color: var(--blood);
-            text-shadow: 3px 3px 0 #000, 0 0 10px rgba(139,0,0,0.7);
-            letter-spacing: 4px;
+        .moon-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+            letter-spacing: 2px;
             position: relative;
             display: inline-block;
             margin: 0;
-            filter: drop-shadow(0 0 5px rgba(139,0,0,0.5));
         }
         
-        .occult-text::before,
-        .occult-text::after {
-            content: "✬";
+        .moon-text::before,
+        .moon-text::after {
+            content: "🔮";
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             font-size: 2.5rem;
-            color: var(--blood);
-            text-shadow: 0 0 5px rgba(139,0,0,0.7);
             opacity: 0.8;
         }
         
-        .occult-text::before {
+        .moon-text::before {
             left: -50px;
         }
         
-        .occult-text::after {
+        .moon-text::after {
             right: -50px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            border: 1px solid #3a0000;
-            box-shadow: 0 0 15px rgba(139,0,0,0.2);
+            margin-bottom: 20px;
         }
         
         header h1 {
             font-size: 2.2rem;
             font-weight: 600;
-            color: var(--blood);
-            text-shadow: 2px 2px 0 #000;
         }
         
         header p {
             color: var(--muted);
-            font-size: 1.1rem;
         }
         
         .tabs {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 30px;
         }
         
         .tabs button {
-            border: 1px solid #3a0000;
+            border: none;
             padding: 12px 28px;
             border-radius: 30px;
-            background: linear-gradient(to bottom, #1a0510, #000);
+            background: var(--card);
             cursor: pointer;
             font-weight: 600;
             transition: .3s;
-            box-shadow: 0 2px 6px rgba(0,0,0,.3), inset 0 1px 0 rgba(139,0,0,0.3);
-            color: var(--muted);
-            font-family: 'MedievalSharp', cursive;
-            text-shadow: 1px 1px 1px #000;
+            box-shadow: 0 2px 6px rgba(0,0,0,.05);
         }
         
         .tabs button.active {
-            background: linear-gradient(to bottom, #8b0000, #400000);
+            background: var(--accent);
             color: #fff;
-            box-shadow: 0 0 10px rgba(139,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
         }
         
         .news-grid {
@@ -212,42 +138,23 @@
         }
         
         .card {
-            background: linear-gradient(to bottom, var(--card), #0f0208);
+            background: var(--card);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px var(--shadow), 0 0 0 1px #3a0000;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
             transition: .3s;
             display: flex;
             flex-direction: column;
-            position: relative;
-        }
-        
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30,5 L35,20 L50,20 L38,30 L43,45 L30,35 L17,45 L22,30 L10,20 L25,20 Z' fill='none' stroke='%238b0000' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
-            background-size: 60px;
-            background-position: center;
-            opacity: 0.3;
-            pointer-events: none;
         }
         
         .card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 20px var(--shadow), 0 0 15px rgba(139,0,0,0.3);
+            transform: translateY(-4px);
         }
         
         .card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            filter: grayscale(30%) contrast(110%);
-            border-bottom: 1px solid #3a0000;
         }
         
         .card-content {
@@ -261,7 +168,6 @@
             font-size: 1.1rem;
             line-height: 1.4;
             margin-bottom: 10px;
-            color: #fff;
         }
         
         .card-content .source {
@@ -272,66 +178,49 @@
         
         .card-content .date {
             font-size: .8rem;
-            color: var(--blood);
+            color: var(--accent);
             margin-bottom: 8px;
-            text-shadow: 0 0 2px rgba(139,0,0,0.5);
         }
         
         .card-content a {
             margin-top: auto;
             align-self: flex-start;
-            color: var(--blood);
+            color: var(--accent);
             font-weight: 600;
             text-decoration: none;
-            position: relative;
-            padding-right: 20px;
-        }
-        
-        .card-content a::after {
-            content: "→";
-            position: absolute;
-            right: 0;
-            transition: transform 0.3s;
         }
         
         .card-content a:hover {
             text-decoration: underline;
         }
         
-        .card-content a:hover::after {
-            transform: translateX(4px);
-        }
-        
         .loading {
             text-align: center;
             padding: 60px;
             color: var(--muted);
-            grid-column: 1 / -1;
         }
         
         #load-more-btn {
             display: block;
-            margin: 30px auto;
+            margin: 20px auto;
             padding: 12px 28px;
-            border: 1px solid #3a0000;
+            border: none;
             border-radius: 30px;
-            background: linear-gradient(to bottom, #8b0000, #400000);
+            background: var(--accent);
             color: #fff;
             cursor: pointer;
             font-weight: 600;
-            box-shadow: 0 2px 6px rgba(0,0,0,.3), 0 0 10px rgba(139,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0,0,0,.05);
             transition: .3s;
-            font-family: 'MedievalSharp', cursive;
-            text-shadow: 1px 1px 2px #000;
         }
         
         #load-more-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,.4), 0 0 15px rgba(139,0,0,0.4);
+            box-shadow: 0 4px 8px rgba(0,0,0,.1);
         }
         
         #load-more-btn:disabled {
-            background: linear-gradient(to bottom, #333, #111);
+            background: var(--muted);
             cursor: not-allowed;
             opacity: 0.7;
         }
@@ -339,12 +228,11 @@
         .error-message {
             text-align: center;
             padding: 20px;
-            color: #ff6b6b;
-            background-color: rgba(139, 0, 0, 0.1);
+            color: #d32f2f;
+            background-color: #ffebee;
             border-radius: 8px;
             margin: 20px auto;
             max-width: 600px;
-            border: 1px solid #3a0000;
         }
         
         .no-more-news {
@@ -352,83 +240,37 @@
             padding: 20px;
             color: var(--muted);
             font-style: italic;
-            grid-column: 1 / -1;
-        }
-
-        /* Efecto de respiración para el fondo */
-        @keyframes breath {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.5; }
-        }
-
-        body::before {
-            animation: breath 15s infinite ease-in-out;
-        }
-
-        /* Efecto de vela parpadeante */
-        @keyframes flicker {
-            0%, 100% { opacity: 0.8; }
-            25% { opacity: 0.6; }
-            50% { opacity: 0.9; }
-            75% { opacity: 0.7; }
-        }
-
-        .card:hover img {
-            animation: flicker 2s infinite;
-        }
-
-        @media (max-width: 768px) {
-            body::after {
-                background-size: 100px 300px;
-            }
-            
-            .occult-text {
-                font-size: 2.5rem;
-            }
-            
-            .occult-text::before,
-            .occult-text::after {
-                font-size: 2rem;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="eyes">
-        <div class="eye" style="top: 15%; left: 10%;"></div>
-        <div class="eye" style="top: 25%; left: 85%;"></div>
-        <div class="eye" style="top: 65%; left: 15%;"></div>
-        <div class="eye" style="top: 75%; left: 80%;"></div>
-        <div class="eye" style="top: 45%; left: 5%;"></div>
-        <div class="eye" style="top: 35%; left: 90%;"></div>
-    </div>
-    
     <div class="main-header">
-        <h1 class="occult-text">CIENCIAS OCULTAS</h1>
+        <h1 class="moon-text">CIENCIAS OCULTAS</h1>
     </div>
     <header>
-        <h1><i class="fas fa-skull"></i> Noticias sobre Ciencias Ocultas</h1>
-        <p>Explora los misterios del ocultismo, la brujería y los fenómenos paranormales</p>
+        <h1><i class="fas fa-moon"></i> Noticias de Ciencias Ocultas</h1>
+        <p>Las últimas noticias sobre ocultismo, brujería y fenómenos paranormales</p>
     </header>
     <div class="tabs">
         <button id="btn-es" class="active">Español</button>
         <button id="btn-en">English</button>
     </div>
     <div id="news-container" class="news-grid">
-        <div class="loading"><i class="fas fa-skull fa-spin"></i> Cargando noticias...</div>
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando noticias…</div>
     </div>
     <button id="load-more-btn">Cargar más noticias</button>
 
     <script>
-        const API_KEY = 'aaf83dcbd8694668ad89247b959db678';
+        // API Configuration
+        const API_KEYS = {
+            GNEWS: '42dd93284a0abf72a9a646d3b4a9c33e',
+            NEWSAPI: 'aaf83dcbd8694668ad89247b959db678',
+            NEWSDATA: 'pub_a6e9ca27cc1644bf9a1cff0b8686b3eb',
+            THE_NEWS: 'api_live_jXhP97cJw1oAwTrL50pkwaWmHq4HE2xBLnqgtDTu8e',
+            NYT: 'Eh3k0BwkVhNGIWmkxaSVDGnZMIW5HxOT',
+            GUARDIAN: 'f88b103a-4f1d-4f19-a5e8-75124f32fb65'
+        };
+
         const container = document.getElementById('news-container');
         const btnEs = document.getElementById('btn-es');
         const btnEn = document.getElementById('btn-en');
@@ -439,46 +281,243 @@
         let totalResults = 0;
         let isLoading = false;
         let allArticles = [];
+        let seenArticleIds = new Set();
 
-        // Palabras clave que indican contenido relevante
+        // Keywords for occult-related content
         const occultKeywords = [
-            'ocultismo', 'brujería', 'brujo', 'bruja', 'hechizo', 'ritual',
-            'satán', 'demonio', 'fantasma', 'espíritu', 'aparición',
-            'casa embrujada', 'exorcismo', 'paranormal', 'sobrenatural',
-            'psíquico', 'telepatía', 'clarividencia', 'ouija', 'sesión',
-            'poltergeist', 'críptido', 'esoterismo', 'misticismo', 'alquimia',
-            'tarot', 'astral', 'medium', 'channeling'
+            'ocultismo','brujería','brujo','bruja','hechizo','ritual','satán','demonio',
+            'fantasma','espíritu','aparición','casa embrujada','exorcismo','paranormal',
+            'sobrenatural','psíquico','telepatía','clarividencia','ouija','sesión',
+            'poltergeist','críptido','esoterismo','misticismo','alquimia','tarot',
+            'astral','medium','channeling',
+            'occult','witchcraft','witch','spell','ritual','satan','demon','ghost',
+            'spirit','haunted','exorcism','paranormal','supernatural','psychic',
+            'telepathy','precognition','clairvoyant','seance','cryptid','ufology'
         ];
 
-        // Palabras que podrían causar falsos positivos
-        const excludeKeywords = [
-            'hot dog', 'hotdog', 'perro caliente', 'perro caliente',
-            'dog', 'dogs', 'perro', 'perros'
-        ];
+        // Terms that might cause false positives
+        const falsePositiveTerms = ['tea','herbal tea','chai','green tea','black tea','tea party'];
 
-        // Función para verificar si una noticia está relacionada con ciencias ocultas
-        function isValidOccultNews(article) {
-            if (!article.title) return false;
+        // Generate a unique ID for an article based on title and source
+        function generateArticleId(article) {
+            const titlePart = article.title ? article.title.substring(0, 30).replace(/\s+/g, '_') : 'no_title';
+            const sourcePart = article.source && article.source.name ? 
+                            article.source.name.replace(/\s+/g, '_') : 'no_source';
+            return `${titlePart}_${sourcePart}`;
+        }
+
+        // Fix image URLs
+        function fixImage(url) {
+            if(!url || url.length<10) return null;
+            if(url.startsWith('//')) return 'https:'+url;
+            if(url.startsWith('/')) return 'https://static01.nyt.com'+url;
+            return url;
+        }
+
+        // Improved function to check if article is occult-related
+        function isOccultRelated(article) {
+            if (!article.title && !article.description) return false;
             
-            const titleLower = article.title.toLowerCase();
-            const descriptionLower = article.description ? article.description.toLowerCase() : '';
-            const contentLower = article.content ? article.content.toLowerCase() : '';
+            const text = (article.title + ' ' + (article.description || '')).toLowerCase();
             
-            // Comprobar si contiene alguna palabra excluida (falsos positivos)
-            for (const word of excludeKeywords) {
-                if (titleLower.includes(word) || descriptionLower.includes(word) || contentLower.includes(word)) {
+            // First check for false positives (terms that indicate it's NOT about occult)
+            const isFalsePositive = falsePositiveTerms.some(term => 
+                text.includes(term.toLowerCase())
+            );
+            
+            if (isFalsePositive) {
+                return false;
+            }
+            
+            // Then check for occult-related keywords
+            const isRelated = occultKeywords.some(keyword => 
+                text.includes(keyword.toLowerCase())
+            );
+            
+            return isRelated;
+        }
+
+        // Filter out duplicate articles
+        function filterDuplicates(articles) {
+            return articles.filter(article => {
+                const articleId = generateArticleId(article);
+                if (seenArticleIds.has(articleId)) {
                     return false;
                 }
-            }
-            
-            // Comprobar si contiene alguna palabra clave oculta
-            for (const word of occultKeywords) {
-                if (titleLower.includes(word) || descriptionLower.includes(word) || contentLower.includes(word)) {
-                    return true;
+                seenArticleIds.add(articleId);
+                return true;
+            });
+        }
+
+        // Fetch from GNews API
+        async function fetchFromGNews() {
+            try {
+                const query = lang === 'es' ? 'ocultismo OR brujería OR paranormal' : 'occult OR witchcraft OR paranormal';
+                const country = lang === 'es' ? 'es' : 'us';
+                
+                const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=${lang}&country=${country}&max=10&apikey=${API_KEYS.GNEWS}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.articles) {
+                    return data.articles
+                        .filter(article => 
+                            article.title && 
+                            article.url && 
+                            article.source &&
+                            !article.title.toLowerCase().includes('[removed]') &&
+                            isOccultRelated(article)
+                        )
+                        .map(article => ({
+                            ...article,
+                            urlToImage: fixImage(article.image)
+                        }));
                 }
+                return [];
+            } catch (error) {
+                console.warn('GNews API error:', error);
+                return [];
             }
+        }
+
+        // Fetch from NewsAPI
+        async function fetchFromNewsAPI() {
+            try {
+                const query = lang === 'es' ? 'ocultismo OR brujería OR paranormal' : 'occult OR witchcraft OR paranormal';
+                const from = new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0];
+                
+                const proxyUrl = 'https://corsproxy.io/?';
+                const targetUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${lang}&from=${from}&sortBy=publishedAt&pageSize=20&page=${currentPage}&apiKey=${API_KEYS.NEWSAPI}`;
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+                const data = await response.json();
+                
+                if (data.articles) {
+                    return data.articles.filter(article => 
+                        article.title && 
+                        article.url && 
+                        article.source &&
+                        !article.title.toLowerCase().includes('[removed]') &&
+                        isOccultRelated(article)
+                    ).map(article => ({
+                        ...article,
+                        urlToImage: fixImage(article.urlToImage)
+                    }));
+                }
+                return [];
+            } catch (error) {
+                console.warn('NewsAPI error:', error);
+                return [];
+            }
+        }
+
+        // Fetch from NewsData API
+        async function fetchFromNewsData() {
+            try {
+                const query = lang === 'es' ? 'ocultismo,brujería,paranormal' : 'occult,witchcraft,paranormal';
+                const language = lang === 'es' ? 'es' : 'en';
+                
+                const url = `https://newsdata.io/api/1/news?apikey=${API_KEYS.NEWSDATA}&q=${query}&language=${language}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.results) {
+                    return data.results.filter(article => 
+                        article.title && 
+                        article.link && 
+                        article.source_id &&
+                        isOccultRelated(article)
+                    ).map(article => ({
+                        title: article.title,
+                        description: article.description,
+                        url: article.link,
+                        urlToImage: fixImage(article.image_url),
+                        publishedAt: article.pubDate,
+                        source: { name: article.source_id }
+                    }));
+                }
+                return [];
+            } catch (error) {
+                console.warn('NewsData API error:', error);
+                return [];
+            }
+        }
+
+        // Fetch from TheNewsAPI
+        async function fetchFromTheNews() {
+            try {
+                const query = lang === 'es' ? 'brujería OR ocultismo' : 'witchcraft OR occult';
+                const url = `https://api.thenewsapi.com/v1/news/all?api_token=${API_KEYS.THE_NEWS}&q=${encodeURIComponent(query)}&language=${lang}&limit=10&page=${currentPage}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.data) {
+                    return data.data.filter(article => 
+                        article.title && 
+                        article.url && 
+                        article.source &&
+                        isOccultRelated(article)
+                    ).map(article => ({
+                        title: article.title,
+                        description: article.description,
+                        url: article.url,
+                        urlToImage: fixImage(article.image_url),
+                        publishedAt: article.published_at,
+                        source: { name: article.source }
+                    }));
+                }
+                return [];
+            } catch (error) {
+                console.warn('TheNewsAPI error:', error);
+                return [];
+            }
+        }
+
+        // Main fetch function that tries all APIs
+        async function fetchNews() {
+            let articles = [];
             
-            return false;
+            try {
+                // Try GNews first (usually fastest and most reliable)
+                console.log(`Fetching from GNews API for ${lang}...`);
+                let gnewsArticles = await fetchFromGNews();
+                gnewsArticles = filterDuplicates(gnewsArticles);
+                articles = [...articles, ...gnewsArticles];
+                
+                // Si no tenemos suficientes artículos, intentamos con NewsAPI
+                if (articles.length < 5) {
+                    console.log(`Trying NewsAPI for ${lang}...`);
+                    let newsApiArticles = await fetchFromNewsAPI();
+                    newsApiArticles = filterDuplicates(newsApiArticles);
+                    articles = [...articles, ...newsApiArticles];
+                }
+                
+                // Si todavía no tenemos suficientes, intentamos con NewsData
+                if (articles.length < 5) {
+                    console.log(`Trying NewsData for ${lang}...`);
+                    let newsDataArticles = await fetchFromNewsData();
+                    newsDataArticles = filterDuplicates(newsDataArticles);
+                    articles = [...articles, ...newsDataArticles];
+                }
+                
+                // Intentamos con TheNewsAPI
+                if (articles.length < 5) {
+                    console.log(`Trying TheNewsAPI for ${lang}...`);
+                    let theNewsArticles = await fetchFromTheNews();
+                    theNewsArticles = filterDuplicates(theNewsArticles);
+                    articles = [...articles, ...theNewsArticles];
+                }
+
+                console.log(`Found ${articles.length} unique articles for ${lang}`);
+                return articles;
+
+            } catch (error) {
+                console.error(`Error fetching news for ${lang}:`, error);
+                return [];
+            }
         }
 
         btnEs.onclick = () => {
@@ -502,52 +541,12 @@
             btn.classList.add('active');
         }
 
-        async function fetchNews(page) {
-            if (isLoading) return { articles: [], totalResults: 0 };
-            
-            isLoading = true;
-            loadMoreBtn.disabled = true;
-            
-            try {
-                // Construir la URL correctamente
-                const query = lang === 'es' 
-                    ? 'ocultismo OR brujería OR paranormal OR esoterismo'
-                    : 'occult OR witchcraft OR paranormal OR esoteric';
-                
-                const apiUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${lang}&page=${page}&sortBy=publishedAt&apiKey=${API_KEY}`;
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-                
-                const res = await fetch(proxyUrl);
-                if (!res.ok) throw new Error('Error en la respuesta de la API');
-                
-                const raw = await res.json();
-                const data = JSON.parse(raw.contents);
-                
-                if (data.status !== 'ok') {
-                    throw new Error(data.message || 'Error en la respuesta de la API');
-                }
-                
-                // Filtrar y ordenar artículos por fecha (más recientes primero)
-                const filteredArticles = data.articles.filter(isValidOccultNews);
-                filteredArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-                
-                return {
-                    articles: filteredArticles,
-                    totalResults: data.totalResults
-                };
-            } catch (err) {
-                console.error('Error fetching news:', err);
-                container.innerHTML = `<div class="error-message">Error al cargar noticias: ${err.message}. Inténtalo más tarde.</div>`;
-                return { articles: [], totalResults: 0 };
-            } finally {
-                isLoading = false;
-            }
-        }
-
         function displayNews(articles) {
             if (articles.length === 0) {
                 if (currentPage === 1) {
-                    container.innerHTML = '<div class="loading">No se encontraron noticias recientes.</div>';
+                    container.innerHTML = '<div class="loading">' + 
+                        (lang === 'es' ? 'No se encontraron noticias recientes.' : 'No recent news found.') + 
+                        '</div>';
                 } else {
                     const noMoreNews = document.createElement('div');
                     noMoreNews.className = 'no-more-news';
@@ -559,14 +558,18 @@
             }
 
             articles.forEach(art => {
+                const fallbackImage = lang === 'es' ? 
+                    'https://via.placeholder.com/400x250/8b0000/ffffff?text=Ocultismo' : 
+                    'https://via.placeholder.com/400x250/8b0000/ffffff?text=Occult';
+                    
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <img src="${art.urlToImage || 'https://via.placeholder.com/300x180/1a0510/8b0000?text=Imagen+no+disponible'}" alt="${art.title}">
+                    <img src="${art.urlToImage || fallbackImage}" alt="${art.title}" onerror="this.src='${fallbackImage}'">
                     <div class="card-content">
                         <span class="date">${new Date(art.publishedAt).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US')}</span>
                         <h3>${art.title}</h3>
-                        <p class="source"><i class="fas fa-newspaper"></i> ${art.source.name}</p>
+                        <p class="source"><i class="fas fa-newspaper"></i> ${art.source.name || 'Unknown Source'}</p>
                         <a href="${art.url}" target="_blank" rel="noopener">${lang === 'es' ? 'Leer más →' : 'Read more →'}</a>
                     </div>
                 `;
@@ -578,8 +581,9 @@
             currentPage = 1;
             totalResults = 0;
             allArticles = [];
-            container.innerHTML = '<div class="loading"><i class="fas fa-skull fa-spin"></i> ' + 
-                                  (lang === 'es' ? 'Cargando noticias...' : 'Loading news...') + '</div>';
+            seenArticleIds.clear();
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> ' + 
+                                  (lang === 'es' ? 'Cargando noticias…' : 'Loading news…') + '</div>';
             loadMoreBtn.disabled = false;
             loadMoreBtn.style.display = 'block';
             loadMoreBtn.textContent = lang === 'es' ? 'Cargar más noticias' : 'Load more news';
@@ -589,37 +593,44 @@
         async function loadNews() {
             if (isLoading) return;
             
-            const newsData = await fetchNews(currentPage);
+            isLoading = true;
+            loadMoreBtn.disabled = true;
             
-            if (newsData.articles.length > 0) {
-                allArticles = [...allArticles, ...newsData.articles];
+            try {
+                const newsData = await fetchNews();
                 
-                if (currentPage === 1) {
-                    container.innerHTML = '';
-                }
-                
-                displayNews(newsData.articles);
-                
-                // Actualizar estado del botón de carga
-                const hasMoreArticles = allArticles.length < newsData.totalResults;
-                loadMoreBtn.disabled = !hasMoreArticles;
-                
-                if (!hasMoreArticles) {
-                    loadMoreBtn.textContent = lang === 'es' ? 'No hay más noticias' : 'No more news';
-                }
-                
-                currentPage++;
-            } else {
-                // No hay más artículos
-                if (currentPage === 1) {
-                    container.innerHTML = '<div class="loading">No se encontraron noticias recientes.</div>';
+                if (newsData.length > 0) {
+                    allArticles = [...allArticles, ...newsData];
+                    
+                    if (currentPage === 1) {
+                        container.innerHTML = '';
+                    }
+                    
+                    displayNews(newsData);
+                    
+                    // Actualizar estado del botón de carga
+                    loadMoreBtn.disabled = false;
+                    
+                    currentPage++;
                 } else {
-                    const noMoreNews = document.createElement('div');
-                    noMoreNews.className = 'no-more-news';
-                    noMoreNews.textContent = lang === 'es' ? 'No hay más noticias disponibles.' : 'No more news available.';
-                    container.appendChild(noMoreNews);
+                    // No hay más artículos
+                    if (currentPage === 1) {
+                        container.innerHTML = '<div class="loading">' + 
+                            (lang === 'es' ? 'No se encontraron noticias recientes.' : 'No recent news found.') + 
+                            '</div>';
+                    } else {
+                        const noMoreNews = document.createElement('div');
+                        noMoreNews.className = 'no-more-news';
+                        noMoreNews.textContent = lang === 'es' ? 'No hay más noticias disponibles.' : 'No more news available.';
+                        container.appendChild(noMoreNews);
+                    }
+                    loadMoreBtn.style.display = 'none';
                 }
-                loadMoreBtn.style.display = 'none';
+            } catch (err) {
+                console.error('Error fetching news:', err);
+                container.innerHTML = `<div class="error-message">${lang === 'es' ? 'Error al cargar noticias. Inténtalo más tarde.' : 'Error loading news. Please try again later.'}</div>`;
+            } finally {
+                isLoading = false;
             }
         }
 
