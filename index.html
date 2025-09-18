@@ -184,7 +184,6 @@
         .tabs button:active {
             transform: scale(0.97);
         }
-        /* === FIJAR PROPORCIÓN DE TARJETAS === */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -345,6 +344,33 @@
             opacity: 0.7;
             transform: none;
         }
+        /* ===== NUEVO ESTILO PARA EL BOTÓN DE TRADUCCIÓN ===== */
+        .translate-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-family: 'MedievalSharp', cursive;
+            cursor: pointer;
+            margin-bottom: 12px;
+            align-self: flex-start;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+        .translate-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(139,0,0,0.4);
+        }
+        .translate-btn:disabled {
+            border-color: var(--muted);
+            color: var(--muted);
+            cursor: not-allowed;
+            background: transparent;
+            box-shadow: none;
+        }
+        /* ======================================================= */
         .error-message {
             text-align: center;
             padding: 16px;
@@ -537,7 +563,6 @@
             'soccer', 'basketball', 'tennis', 'golf'
         ];
 
-        // Fuentes RSS en español
         const rssFeedsEs = [
             { name: 'El Tiempo Ocultismo', url: 'https://www.eltiempo.com/rss', filter: 'ocultismo' },
             { name: 'El País Ocultismo', url: 'https://feeds.elpais.com/mrss-s/page', filter: 'ocultismo' },
@@ -552,7 +577,6 @@
             { name: 'The Daily Grail', url: 'https://www.dailygrail.com/feed/' }
         ];
 
-        // Fuentes RSS en inglés
         const rssFeedsEn = [
             { name: 'The Wild Hunt', url: 'https://wildhunt.org/feed' },
             { name: 'Occult World', url: 'https://occult-world.com/feed/' },
@@ -584,7 +608,6 @@
         let allArticlesEs = [];
         let allArticlesEn = [];
 
-        // Configurar filtros de fuente
         filterAll.onclick = () => {
             currentSourceFilter = 'all';
             filterAll.classList.add('active');
@@ -613,7 +636,6 @@
             const container = currentLang === 'es' ? newsEsContainer : newsEnContainer;
             const articles = currentLang === 'es' ? allArticlesEs : allArticlesEn;
             
-            // Filtrar artículos según la fuente seleccionada
             let filteredArticles = articles;
             if (currentSourceFilter === 'api') {
                 filteredArticles = articles.filter(article => article.sourceType === 'NewsAPI');
@@ -621,10 +643,8 @@
                 filteredArticles = articles.filter(article => article.sourceType === 'RSS');
             }
             
-            // Limpiar el contenedor
             container.innerHTML = '';
             
-            // Mostrar artículos filtrados
             if (filteredArticles.length > 0) {
                 appendArticles(filteredArticles, container, currentLang);
             } else {
@@ -672,7 +692,6 @@
 
         async function fetchRSSFeed(feed, lang) {
             try {
-                // Usar un proxy para evitar problemas de CORS
                 const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
                 const res = await fetch(proxyUrl);
                 if (!res.ok) throw new Error('Error al obtener el feed RSS');
@@ -680,10 +699,8 @@
                 const data = await res.json();
                 if (data.status !== 'ok') throw new Error(data.message || 'Error en el feed RSS');
                 
-                // Filtrar artículos por palabras clave y por filtro específico si existe
                 return data.items
                     .filter(item => {
-                        // Aplicar filtro específico si está definido
                         if (feed.filter && !item.title.toLowerCase().includes(feed.filter.toLowerCase()) && 
                             !item.description.toLowerCase().includes(feed.filter.toLowerCase())) {
                             return false;
@@ -709,7 +726,6 @@
             const feeds = lang === 'es' ? rssFeedsEs : rssFeedsEn;
             const allArticles = [];
             
-            // Usar Promise.all para cargar todos los feeds simultáneamente
             const promises = feeds.map(feed => fetchRSSFeed(feed, lang));
             const results = await Promise.allSettled(promises);
             
@@ -738,6 +754,16 @@
                 });
 
                 const fallback = 'https://neopraxis.mx/wp-content/uploads/2023/07/%C2%BFPor-que-la-gente-recurre-a-la-brujeria-Explicacion-psicologica.png';
+                
+                // ===== MODIFICACIÓN: Añadir botón de traducción para noticias en inglés =====
+                const translateButtonHtml = lang === 'en' ? `
+                    <button class="translate-btn"
+                            data-title="${(art.title || '').replace(/"/g, '&quot;')}"
+                            data-desc="${(art.description || '').replace(/"/g, '&quot;')}">
+                        <i class="fas fa-language"></i> Traducir
+                    </button>
+                ` : '';
+                // =========================================================================
 
                 card.innerHTML = `
                     <img src="${art.urlToImage || fallback}" alt="${art.title}" loading="lazy" onerror="this.src='${fallback}'">
@@ -748,6 +774,7 @@
                             '<span class="rss-badge">RSS</span>'}</h3>
                         <div class="source"><i class="fas fa-newspaper"></i> ${art.source?.name || 'Unknown'}</div>
                         ${art.description ? `<div class="description">${art.description}</div>` : ''}
+                        ${translateButtonHtml}
                         <a href="${art.url}" target="_blank" rel="noopener noreferrer">${lang === 'es' ? 'Leer más →' : 'Read more →'}</a>
                     </div>
                 `;
@@ -774,7 +801,6 @@
             apiStatus.style.display = 'block';
 
             try {
-                // Obtener noticias de NewsAPI y RSS simultáneamente
                 const [newsEs, newsEn, rssEs, rssEn] = await Promise.all([
                     fetchNewsAPI('es', currentPageEs),
                     fetchNewsAPI('en', currentPageEn),
@@ -782,7 +808,6 @@
                     fetchAllRSSFeeds('en')
                 ]);
 
-                // Eliminar duplicados y agregar nuevos artículos
                 const uniqueEs = [];
                 [...newsEs, ...rssEs].forEach(art => {
                     const norm = normalizeTitle(art.title);
@@ -801,18 +826,14 @@
                     }
                 });
 
-                // Almacenar todos los artículos
                 allArticlesEs = [...allArticlesEs, ...uniqueEs];
                 allArticlesEn = [...allArticlesEn, ...uniqueEn];
 
-                // Actualizar la visualización según el filtro actual
                 updateDisplayedArticles();
 
-                // Actualizar paginación
                 if (uniqueEs.length > 0) currentPageEs++;
                 if (uniqueEn.length > 0) currentPageEn++;
 
-                // Habilitar el botón de cargar más si hay más artículos
                 const hasMore = uniqueEs.length > 0 || uniqueEn.length > 0;
                 if (hasMore) {
                     loadMoreBtn.disabled = false;
@@ -846,6 +867,61 @@
                 apiStatus.style.display = 'none';
             }
         }
+        
+        /* ===== NUEVA FUNCIONALIDAD DE TRADUCCIÓN ===== */
+        async function handleTranslation(event) {
+            if (!event.target.classList.contains('translate-btn')) return;
+
+            const btn = event.target;
+            const card = btn.closest('.card');
+            const titleEl = card.querySelector('h3');
+            const descEl = card.querySelector('.description');
+
+            const originalTitle = btn.dataset.title;
+            const originalDesc = btn.dataset.desc;
+
+            if (!originalTitle && !originalDesc) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traduciendo...';
+
+            const badgeEl = titleEl.querySelector('.authenticity-badge, .rss-badge');
+            const badgeHtml = badgeEl ? badgeEl.outerHTML : '';
+
+            try {
+                const combinedText = `${originalTitle} ||| ${originalDesc}`;
+                const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(combinedText)}&langpair=en|es`;
+                
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('API response not OK');
+                
+                const data = await response.json();
+                
+                if (data.responseData && data.responseData.translatedText) {
+                    const [translatedTitle, translatedDesc] = data.responseData.translatedText.split(' ||| ');
+                    
+                    if (titleEl && translatedTitle) {
+                        titleEl.innerHTML = `${translatedTitle.trim()} ${badgeHtml}`;
+                    }
+                    if (descEl && translatedDesc) {
+                        descEl.textContent = translatedDesc.trim();
+                    }
+                    btn.innerHTML = '<i class="fas fa-check"></i> Traducido';
+                } else {
+                    throw new Error('Invalid translation data');
+                }
+            } catch (error) {
+                console.error('Translation failed:', error);
+                btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-language"></i> Traducir';
+                }, 3000);
+            }
+        }
+
+        newsEnContainer.addEventListener('click', handleTranslation);
+        // ==============================================
 
         btnEs.onclick = () => {
             currentLang = 'es';
