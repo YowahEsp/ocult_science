@@ -544,7 +544,7 @@
     <button id="load-more-btn">Cargar más noticias verificadas</button>
 
     <script>
-        const API_KEY = 'aaf83dcbd8694668ad89247b959db678';
+        const PROXY = 'https://noticias-proxy.esperance.workers.dev';
         const occultKeywords = [
             'ocultismo', 'brujería', 'brujo', 'bruja', 'hechizo', 'ritual',
             'satán', 'demonio', 'fantasma', 'espíritu', 'aparición',
@@ -563,29 +563,17 @@
             'soccer', 'basketball', 'tennis', 'golf'
         ];
 
+        // Feeds verificados 18-09-2026
         const rssFeedsEs = [
-            { name: 'El Tiempo Ocultismo', url: 'https://www.eltiempo.com/rss', filter: 'ocultismo' },
-            { name: 'El País Ocultismo', url: 'https://feeds.elpais.com/mrss-s/page', filter: 'ocultismo' },
-            { name: 'Infobae Ocultismo', url: 'https://www.infobae.com/rss', filter: 'ocultismo' },
-            { name: 'The Wild Hunt', url: 'https://wildhunt.org/feed' },
-            { name: 'Occult World', url: 'https://occult-world.com/feed/' },
-            { name: 'Mysterious Universe', url: 'https://mysteriousuniverse.org/feed/' },
-            { name: 'Coast to Coast AM', url: 'https://www.coasttocoastam.com/feed/' },
-            { name: 'The Lineup', url: 'https://the-line-up.com/feed' },
-            { name: 'Fate Magazine', url: 'https://www.fatemag.com/feed/' },
-            { name: 'Llewellyn Worldwide', url: 'https://www.llewellyn.com/rss.php' },
-            { name: 'The Daily Grail', url: 'https://www.dailygrail.com/feed/' }
+            { name: 'El Rincón Paranormal', url: 'https://www.rinconparanormaloficial.com/feeds/posts/default?alt=rss' }
         ];
 
         const rssFeedsEn = [
             { name: 'The Wild Hunt', url: 'https://wildhunt.org/feed' },
             { name: 'Occult World', url: 'https://occult-world.com/feed/' },
-            { name: 'Mysterious Universe', url: 'https://mysteriousuniverse.org/feed/' },
-            { name: 'Coast to Coast AM', url: 'https://www.coasttocoastam.com/feed/' },
-            { name: 'The Lineup', url: 'https://the-line-up.com/feed' },
-            { name: 'Fate Magazine', url: 'https://www.fatemag.com/feed/' },
-            { name: 'Llewellyn Worldwide', url: 'https://www.llewellyn.com/rss.php' },
-            { name: 'The Daily Grail', url: 'https://www.dailygrail.com/feed/' }
+            { name: 'The Daily Grail', url: 'https://www.dailygrail.com/feed/' },
+            { name: 'Higgypop', url: 'https://higgypop.com/feed.xml' },
+            { name: 'The Public Domain Review', url: 'https://publicdomainreview.org/rss.xml' }
         ];
 
         const newsEsContainer = document.getElementById('news-container-es');
@@ -676,9 +664,7 @@
             const query = lang === 'es'
                 ? 'ocultismo OR brujería OR paranormal OR esoterismo'
                 : 'occult OR witchcraft OR paranormal OR esoteric';
-            const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${lang}&page=${page}&sortBy=publishedAt&apiKey=${API_KEY}&_t=${Date.now()}`;
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-            const res = await fetch(proxyUrl);
+            const res = await fetch(`${PROXY}/newsapi?q=${encodeURIComponent(query)}&lang=${lang}`);
             if (!res.ok) throw new Error('Error en la respuesta de la API');
             const data = await res.json();
             if (data.status !== 'ok') throw new Error(data.message || 'Error en la respuesta de la API');
@@ -692,30 +678,36 @@
 
         async function fetchRSSFeed(feed, lang) {
             try {
-                const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-                const res = await fetch(proxyUrl);
+                const res = await fetch(`${PROXY}/rss?url=${encodeURIComponent(feed.url)}`);
                 if (!res.ok) throw new Error('Error al obtener el feed RSS');
-                
-                const data = await res.json();
-                if (data.status !== 'ok') throw new Error(data.message || 'Error en el feed RSS');
-                
-                return data.items
+                const xml = new DOMParser().parseFromString(await res.text(), "application/xml");
+                if (xml.querySelector("parsererror")) throw new Error('XML no válido');
+
+                return [...xml.querySelectorAll("item, entry")]
+                    .map(it => {
+                        const desc = it.querySelector("description, summary, content")?.textContent || "";
+                        const medio = it.getElementsByTagName("media:content")[0]
+                                   || it.getElementsByTagName("media:thumbnail")[0]
+                                   || it.getElementsByTagName("enclosure")[0];
+                        return {
+                            title: it.querySelector("title")?.textContent || "",
+                            description: desc.replace(/<[^>]*>?/gm, "").trim(),
+                            url: it.querySelector("link")?.getAttribute("href")
+                              || it.querySelector("link")?.textContent || "",
+                            urlToImage: medio?.getAttribute("url")
+                              || (desc.match(/<img[^>]+src=["']([^"']+)/i) || [])[1] || null,
+                            publishedAt: it.querySelector("pubDate, updated, published")?.textContent || "",
+                            source: { name: feed.name },
+                            sourceType: 'RSS'
+                        };
+                    })
                     .filter(item => {
-                        if (feed.filter && !item.title.toLowerCase().includes(feed.filter.toLowerCase()) && 
+                        if (feed.filter && !item.title.toLowerCase().includes(feed.filter.toLowerCase()) &&
                             !item.description.toLowerCase().includes(feed.filter.toLowerCase())) {
                             return false;
                         }
-                        return isValidOccultNews(item.title, item.description, item.content);
-                    })
-                    .map(item => ({
-                        title: item.title,
-                        description: item.description,
-                        url: item.link,
-                        urlToImage: item.thumbnail || null,
-                        publishedAt: item.pubDate,
-                        source: { name: feed.name },
-                        sourceType: 'RSS'
-                    }));
+                        return isValidOccultNews(item.title, item.description, item.description);
+                    });
             } catch (error) {
                 console.error(`Error fetching RSS feed from ${feed.url}:`, error);
                 return [];
